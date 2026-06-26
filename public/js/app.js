@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Global active region state
+    let currentRegion = 'US';
+    
     // ==========================================
     // RESPONSIVE MENU TOGGLE
     // ==========================================
@@ -167,10 +170,21 @@ document.addEventListener('DOMContentLoaded', () => {
         
         function updateDisplay() {
             const currentUnits = calculatePreOrders();
-            const currentRevenue = currentUnits * pricePerUnit;
-            
             preOrderUnitsEl.textContent = currentUnits.toLocaleString();
-            preOrderRevenueEl.textContent = '$' + Math.floor(currentRevenue).toLocaleString();
+            
+            if (currentRegion === 'IN') {
+                // Convert USD to INR (rate 83.5) and format in Crores (1 Crore = 10,000,000 INR)
+                const currentRevenueUSD = currentUnits * pricePerUnit;
+                const currentRevenueINR = currentRevenueUSD * 83.5;
+                const revenueInCrore = currentRevenueINR / 10000000;
+                preOrderRevenueEl.textContent = '₹' + revenueInCrore.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }) + ' Crore';
+            } else {
+                const currentRevenue = currentUnits * pricePerUnit;
+                preOrderRevenueEl.textContent = '$' + Math.floor(currentRevenue).toLocaleString();
+            }
         }
         
         // Initial set
@@ -207,6 +221,70 @@ document.addEventListener('DOMContentLoaded', () => {
     const tickerCard = document.getElementById('tickerCard');
     let tickerIndex = 0;
     
+    // ==========================================
+    // SECTION 4.5: INDIAN & REGIONAL LOCALIZATION DATA
+    // ==========================================
+    const baseCommunityReactions = [...communityReactions];
+    const indianCommunityReactions = [
+        { platform: "Reddit", user: "u/DesiGamer_99", text: "Pre-ordered! ₹6,699 is steep but GTA 6 will last another 10 years. Worth it." },
+        { platform: "X", user: "@TechnicalRaj", text: "Waiting for carryminati and techno gamerz stream on launch day! GTA 6 is going to break Indian YouTube servers." },
+        { platform: "Reddit", user: "u/Lucia_Ki_Jai", text: "Lucia and Jason in Vice City is going to be epic. Already saved up pocket money for PS5." },
+        { platform: "X", user: "@MumbaiIndiansGamer", text: "No PC version at launch means renting a console is the only way. Time to search for gaming parlours nearby!" },
+        { platform: "YouTube", user: "Top comment (India)", text: "GTA 5 came out when I was in school, now I am a software engineer waiting for GTA 6. Time flies!" }
+    ];
+
+    let activeCommunityReactions = [...baseCommunityReactions];
+
+    function applyRegionalCustomizations(region) {
+        const preOrderRevenueLabel = document.getElementById('preOrderRevenueLabel');
+        const preOrderRevenueSub = document.getElementById('preOrderRevenueSub');
+        const countdownSubtext = document.getElementById('countdownSubtext');
+        const statYear1Revenue = document.getElementById('statYear1Revenue');
+        const statYear1RevenueLabel = document.getElementById('statYear1RevenueLabel');
+        const statPreorderPredictionLabel = document.getElementById('statPreorderPredictionLabel');
+
+        if (region === 'IN') {
+            // Pre-order tracker
+            if (preOrderRevenueLabel) preOrderRevenueLabel.textContent = "Projected Revenue (INR)";
+            if (preOrderRevenueSub) preOrderRevenueSub.textContent = "Based on ₹6,699 Standard Edition";
+
+            // Countdown subtext
+            if (countdownSubtext) {
+                countdownSubtext.innerHTML = `Grand Theft Auto VI &middot; PS5 &amp; Xbox Series X|S &middot; Nov 19, 2026 &middot; 10:30 AM IST`;
+            }
+
+            // Stats cards
+            if (statYear1Revenue) statYear1Revenue.textContent = "₹26,720 Crore";
+            if (statYear1RevenueLabel) statYear1RevenueLabel.textContent = "Analyst Year-1 Projected Revenue (INR)";
+            if (statPreorderPredictionLabel) {
+                statPreorderPredictionLabel.innerHTML = `Pre-order ₹8,350 Crore ($1B) prediction &middot; Tom Henderson`;
+            }
+
+            // Inject Indian community reactions
+            activeCommunityReactions = [...indianCommunityReactions, ...baseCommunityReactions];
+        } else {
+            // Revert to USD / default
+            if (preOrderRevenueLabel) preOrderRevenueLabel.textContent = "Projected Revenue (USD)";
+            if (preOrderRevenueSub) preOrderRevenueSub.textContent = "Based on $79.99 Standard Edition";
+
+            if (countdownSubtext) {
+                countdownSubtext.innerHTML = `Grand Theft Auto VI &middot; PS5 &amp; Xbox Series X|S &middot; Nov 19, 2026`;
+            }
+
+            if (statYear1Revenue) statYear1Revenue.textContent = "$3.2 Billion";
+            if (statYear1RevenueLabel) statYear1RevenueLabel.textContent = "Analyst Year-1 Projected Revenue";
+            if (statPreorderPredictionLabel) {
+                statPreorderPredictionLabel.innerHTML = `Pre-order $1B prediction &middot; Tom Henderson`;
+            }
+
+            // Standard reactions
+            activeCommunityReactions = [...baseCommunityReactions];
+        }
+        
+        // Reset ticker index so new reviews cycle in
+        tickerIndex = 0;
+    }
+
     function rotateReactions() {
         if (!tickerCard) return;
         
@@ -214,8 +292,8 @@ document.addEventListener('DOMContentLoaded', () => {
         tickerCard.classList.add('fade-out');
         
         setTimeout(() => {
-            tickerIndex = (tickerIndex + 1) % communityReactions.length;
-            const data = communityReactions[tickerIndex];
+            tickerIndex = (tickerIndex + 1) % activeCommunityReactions.length;
+            const data = activeCommunityReactions[tickerIndex];
             
             // Get platform lowercase and set class
             const platformClass = `platform-${data.platform.toLowerCase()}`;
@@ -360,10 +438,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalBackdrop = document.getElementById('modalBackdrop');
     const modalIframe = document.getElementById('modalIframe');
     
-    let currentRegion = 'US';
-
     // Geolocation to detect country code
     async function detectUserRegion() {
+        // Try ipapi.co first
         try {
             const res = await fetch('https://ipapi.co/json/');
             if (res.ok) {
@@ -373,7 +450,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         } catch (e) {
-            console.warn("IP Geolocation failed, reading browser locale:", e);
+            console.warn("ipapi.co Geolocation failed, trying api.country.is:", e);
+        }
+
+        // Try api.country.is as secondary API
+        try {
+            const res = await fetch('https://api.country.is');
+            if (res.ok) {
+                const info = await res.json();
+                if (info.country) {
+                    return info.country.toUpperCase();
+                }
+            }
+        } catch (e) {
+            console.warn("api.country.is Geolocation failed, reading browser locale:", e);
         }
         
         // Fallback locale parse (e.g. en-IN -> IN)
@@ -505,11 +595,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // Wire change listener
             regionSelect.addEventListener('change', (e) => {
                 currentRegion = e.target.value;
+                applyRegionalCustomizations(currentRegion);
                 renderCreatorCards(currentRegion);
                 fetchTrendingVideos();
             });
         }
         
+        applyRegionalCustomizations(currentRegion);
         renderCreatorCards(currentRegion);
         fetchTrendingVideos();
     }
