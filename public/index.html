@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GTA 6 LIVE HUB - The ultimate real-time fan dashboard for everything Grand Theft Auto VI. Real-time launch countdown, official statements timeline, sales trackers, and community reactions.">
+    <title>GTA 6 LIVE HUB · Real-Time Fan Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Scanline & Noise Overlay for retro-cinematic vibe -->
+    <div class="crt-overlay"></div>
+    <div class="noise-overlay"></div>
+
+    <!-- Sticky Navigation -->
+    <header class="main-header">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-accent">GTA VI</span> LIVE HUB
+            </a>
+            
+            <div class="header-widgets">
+                <!-- Theme Toggle Button -->
+                <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle Time of Day" title="Toggle Theme (Golden Hour / Neon Night)">
+                    <span class="theme-icon" id="themeIcon">🌅</span>
+                </button>
+                
+                <!-- Radio Widget -->
+                <div class="radio-widget">
+                    <audio id="retroAudio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop></audio>
+                    <button id="radioPlayBtn" class="radio-btn" aria-label="Play Radio" title="Play Vice City Radio">
+                        <svg class="play-icon" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        <svg class="pause-icon hidden" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+                    </button>
+                    <div class="radio-info">
+                        <span class="radio-station">WAVE 103</span>
+                        <div class="visualizer-bars" id="audioVisualizer">
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                            <span class="bar"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wanted HUD Stars -->
+                <div class="wanted-hud">
+                    <div class="stars-container" id="starsContainer">
+                        <span class="wanted-star" data-index="1">★</span>
+                        <span class="wanted-star" data-index="2">★</span>
+                        <span class="wanted-star" data-index="3">★</span>
+                        <span class="wanted-star" data-index="4">★</span>
+                        <span class="wanted-star" data-index="5">★</span>
+                        <span class="wanted-star" data-index="6">★</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <nav class="nav-menu" id="navMenu">
+                <a href="#sales" class="nav-link">Stats</a>
+                <a href="#countdown" class="nav-link">Countdown</a>
+                <a href="#statements" class="nav-link">Timeline</a>
+                <a href="#reactions" class="nav-link">Reactions</a>
+                <a href="#creators" class="nav-link">Creators</a>
+                <a href="#trending" class="nav-link">Trending</a>
+                <a href="#links" class="nav-link">Community</a>
+                <a href="#hype-chronology" class="nav-link">Launch Road</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- SECTION 3: SALES & HYPE NUMBERS -->
+    <section id="sales" class="section-container top-hero-section">
+        <!-- Floating GTA 6 Decals -->
+        <svg class="floating-decal decal-left-1" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22V10M12 10C8.5 10 6 7 6 5M12 10C15.5 10 18 7 18 5M12 10C10 6.5 8 5.5 8 4M12 10C14 6.5 16 5.5 16 4M12 10V3"/>
+        </svg>
+        <svg class="floating-decal decal-right-1" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 8h11a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-4v5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-5H4v-2c0-1.1.9-2 2-2zM12 14v4M15 11h2"/>
+        </svg>
+        <svg class="floating-decal decal-left-2" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 17h2c0-1.1.9-2 2-2s2 .9 2 2h8c0-1.1.9-2 2-2s2 .9 2 2h2v-3.5L17.5 9h-7L6 13.5V17zM6 17m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0M18 17m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/>
+        </svg>
+        <svg class="floating-decal decal-right-2" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18M5 21V8h4v13M9 21V4h6v17M15 21v-8h4v8"/>
+        </svg>
+        <div class="section-header">
+            <div class="status-badge">
+                <span class="pulse-dot"></span> LIVE TRANSMISSION FROM VICE CITY
+            </div>
+            <h1 class="section-title text-huge">SALES &amp; HYPE NUMBERS</h1>
+            <p class="section-subtitle">The commercial power of the Grand Theft Auto franchise</p>
+        </div>
+
+        <!-- Live Simulated Counter -->
+        <div class="live-tracker-card">
+            <div class="tracker-header">
+                <span class="live-indicator"><span class="pulse-dot"></span> SIMULATED PRE-ORDER CLOCK</span>
+                <span class="tracker-date">Start: June 25, 2026</span>
+            </div>
+            
+            <div class="tracker-grid">
+                <div class="tracker-metric">
+                    <div class="metric-label">Estimated Pre-Order Units</div>
+                    <div class="metric-value font-neon" id="preOrderUnits">5,000,000</div>
+                    <div class="metric-sub">Ticking dynamically (+1 / 300ms)</div>
+                </div>
+                <div class="tracker-metric">
+                    <div class="metric-label">Projected Revenue (USD)</div>
+                    <div class="metric-value font-neon text-gold" id="preOrderRevenue">$399,950,000</div>
+                    <div class="metric-sub">Based on $79.99 Standard Edition</div>
+                </div>
+            </div>
+            
+            <div class="tracker-disclaimer">
+                Disclaimer: Simulated estimator based on analyst projections. Not official Rockstar/Take-Two data.
+            </div>
+        </div>
+
+        <!-- Stat Cards Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-num" data-target="230000000">0</div>
+                <div class="stat-label">GTA 5 Lifetime Sales (copies)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👑</div>
+                <div class="stat-num" data-target="470000000" data-suffix="+">0</div>
+                <div class="stat-label">GTA Franchise Total (units)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📺</div>
+                <div class="stat-num" data-target="268000000">0</div>
+                <div class="stat-label">Trailer 1 YouTube Views</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-num" data-target="475000000">0</div>
+                <div class="stat-label">Trailer 2 Views (24hr All Platforms)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎮</div>
+                <div class="stat-num" data-target="1830000000" data-divide="100" data-decimal="1">0</div>
+                <div class="stat-label">GTA Online Monthly Players (2026)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-text">15M &ndash; 46M</div>
+                <div class="stat-label">Analyst Day-1 Projections (copies)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-text">$3.2 Billion</div>
+                <div class="stat-label">Analyst Year-1 Projected Revenue</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-text">Under 1 Hour</div>
+                <div class="stat-label">Pre-order $1B prediction &middot; Tom Henderson</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 1: HERO COUNTDOWN -->
+    <section id="countdown" class="hero-section">
+        <!-- Floating GTA 6 Decals -->
+        <svg class="floating-decal decal-left-1" viewBox="0 0 24 24" fill="none" stroke="var(--secondary-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22V10M12 10C8.5 10 6 7 6 5M12 10C15.5 10 18 7 18 5M12 10C10 6.5 8 5.5 8 4M12 10C14 6.5 16 5.5 16 4M12 10V3"/>
+        </svg>
+        <svg class="floating-decal decal-right-1" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 8h11a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-4v5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-5H4v-2c0-1.1.9-2 2-2zM12 14v4M15 11h2"/>
+        </svg>
+        <div class="hero-content">
+            <h2 class="hero-title">COUNTDOWN TO LAUNCH</h2>
+            
+            <!-- Live Countdown Grid -->
+            <div class="countdown-container" id="countdownTimer">
+                <div class="countdown-block">
+                    <span class="countdown-val" id="days">--</span>
+                    <span class="countdown-lbl">DAYS</span>
+                </div>
+                <div class="countdown-sep">/</div>
+                <div class="countdown-block">
+                    <span class="countdown-val" id="hours">--</span>
+                    <span class="countdown-lbl">HOURS</span>
+                </div>
+                <div class="countdown-sep">/</div>
+                <div class="countdown-block">
+                    <span class="countdown-val" id="minutes">--</span>
+                    <span class="countdown-lbl">MINUTES</span>
+                </div>
+                <div class="countdown-sep">/</div>
+                <div class="countdown-block">
+                    <span class="countdown-val" id="seconds">--</span>
+                    <span class="countdown-lbl">SECONDS</span>
+                </div>
+            </div>
+            
+            <p class="hero-subtext">Grand Theft Auto VI &middot; PS5 &amp; Xbox Series X|S &middot; Nov 19, 2026</p>
+            
+            <div class="hero-buttons">
+                <a href="#statements" class="btn btn-primary">Official Timeline</a>
+                <a href="#hype-chronology" class="btn btn-secondary">Road to Launch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: OFFICIAL ROCKSTAR STATEMENTS -->
+    <section id="statements" class="section-container bg-alt">
+        <div class="section-header">
+            <h2 class="section-title">OFFICIAL ROCKSTAR STATEMENTS</h2>
+            <p class="section-subtitle">Chronological record of official Take-Two &amp; Rockstar updates</p>
+        </div>
+
+        <div class="vertical-timeline">
+            <!-- Timeline Item 1 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <div class="timeline-card-header">
+                        <span class="badge badge-official">Official Update</span>
+                        <span class="timeline-date">December 4, 2023</span>
+                    </div>
+                    <h3 class="timeline-card-title">Trailer 1 Released</h3>
+                    <div class="timeline-card-summary">
+                        Rockstar drops first GTA 6 trailer ahead of schedule after it leaked. Sets records worldwide.
+                    </div>
+                    <div class="timeline-card-details">
+                        <p class="details-text">Rockstar drops first GTA 6 trailer ahead of schedule after it leaked. 93M YouTube views in 24 hours. Sets record as most-viewed non-music video in 24hrs ever.</p>
+                        <div class="details-meta">
+                            <span class="meta-label">Source:</span>
+                            <a href="https://rockstargames.com" target="_blank" class="meta-link">rockstargames.com</a>
+                        </div>
+                    </div>
+                    <button class="expand-btn">
+                        <span>Read More</span>
+                        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Timeline Item 2 -->
+            <div class="timeline-item">
+                <div class="timeline-dot animate-pulse-glow"></div>
+                <div class="timeline-card">
+                    <div class="timeline-card-header">
+                        <span class="badge badge-warning">Delay Notice</span>
+                        <span class="timeline-date">May 2, 2025</span>
+                    </div>
+                    <h3 class="timeline-card-title">First Delay — Pushed to May 26, 2026</h3>
+                    <div class="timeline-card-summary">
+                        Rockstar officially delays GTA 6 from Fall 2025 to mid 2026.
+                    </div>
+                    <div class="timeline-card-details">
+                        <p class="details-text">Rockstar officially delays GTA 6 from Fall 2025 to May 26, 2026. Statement: "We are very sorry that this is later than you expected. We want to deliver at the level of quality you expect and deserve."</p>
+                        <div class="details-meta">
+                            <span class="meta-label">Source:</span>
+                            <span class="meta-val">Rockstar Newswire</span>
+                        </div>
+                    </div>
+                    <button class="expand-btn">
+                        <span>Read More</span>
+                        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Timeline Item 3 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <div class="timeline-card-header">
+                        <span class="badge badge-official">Official Update</span>
+                        <span class="timeline-date">May 6, 2025</span>
+                    </div>
+                    <h3 class="timeline-card-title">Trailer 2 Released</h3>
+                    <div class="timeline-card-summary">
+                        Second trailer drops, revealing character names and breaking records again.
+                    </div>
+                    <div class="timeline-card-details">
+                        <p class="details-text">Second trailer drops revealing protagonist full names: Lucia and Jason. Features Pointer Sisters 'Hot Together'. 475M views across all platforms in 24 hours — biggest entertainment trailer launch ever, beating Deadpool & Wolverine.</p>
+                        <div class="details-meta">
+                            <span class="meta-label">Source:</span>
+                            <span class="meta-val">Rockstar Games</span>
+                        </div>
+                    </div>
+                    <button class="expand-btn">
+                        <span>Read More</span>
+                        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Timeline Item 4 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <div class="timeline-card-header">
+                        <span class="badge badge-danger">Controversy</span>
+                        <span class="timeline-date">October 30, 2025</span>
+                    </div>
+                    <h3 class="timeline-card-title">Rockstar Fires 34 Employees</h3>
+                    <div class="timeline-card-summary">
+                        Leaks result in immediate terminations. Union disputes trigger.
+                    </div>
+                    <div class="timeline-card-details">
+                        <p class="details-text">34 employees fired for sharing confidential information. IWGB union accused Rockstar of union busting. Morale reported at 'rock bottom' internally.</p>
+                        <div class="details-meta">
+                            <span class="meta-label">Source:</span>
+                            <span class="meta-val">Multiple outlets</span>
+                        </div>
+                    </div>
+                    <button class="expand-btn">
+                        <span>Read More</span>
+                        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Timeline Item 5 -->
+            <div class="timeline-item">
+                <div class="timeline-dot animate-pulse-glow"></div>
+                <div class="timeline-card">
+                    <div class="timeline-card-header">
+                        <span class="badge badge-warning">Delay Notice</span>
+                        <span class="timeline-date">November 6, 2025</span>
+                    </div>
+                    <h3 class="timeline-card-title">Second Delay — Pushed to November 19, 2026</h3>
+                    <div class="timeline-card-summary">
+                        GTA 6 delayed 6 months. Take-Two CEO speaks on quality goals. Stock drops.
+                    </div>
+                    <div class="timeline-card-details">
+                        <p class="details-text">Take-Two announces alongside Q2 earnings: GTA 6 delayed 6 months to November 19, 2026. CEO Strauss Zelnick: "We're seeking to release the most extraordinary title anyone's ever seen in the history of entertainment." Take-Two stock drops ~10%.</p>
+                        <div class="details-meta">
+                            <span class="meta-label">Source:</span>
+                            <span class="meta-val">Rockstar Newswire + Variety</span>
+                        </div>
+                    </div>
+                    <button class="expand-btn">
+                        <span>Read More</span>
+                        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Timeline Item 6 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <div class="timeline-card-header">
+                        <span class="badge badge-official">Official Update</span>
+                        <span class="timeline-date">June 18, 2026</span>
+                    </div>
+                    <h3 class="timeline-card-title">Cover Art &amp; Pre-Orders Announced</h3>
+                    <div class="timeline-card-summary">
+                        Official art and pre-order dates revealed. Discless distribution triggers debate.
+                    </div>
+                    <div class="timeline-card-details">
+                        <p class="details-text">Rockstar reveals official GTA 6 cover art featuring Lucia and Jason. Pre-orders confirmed to open June 25, 2026. Partnership with PlayStation announced. Physical versions contain download codes only — no disc.</p>
+                        <div class="details-meta">
+                            <span class="meta-label">Source:</span>
+                            <span class="meta-val">Rockstar Games</span>
+                        </div>
+                    </div>
+                    <button class="expand-btn">
+                        <span>Read More</span>
+                        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Timeline Item 7 -->
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-card">
+                    <div class="timeline-card-header">
+                        <span class="badge badge-success">Pre-Orders Live</span>
+                        <span class="timeline-date">June 25, 2026</span>
+                    </div>
+                    <h3 class="timeline-card-title">Pre-Orders Go Live</h3>
+                    <div class="timeline-card-summary">
+                        Pre-orders open on PlayStation &amp; Xbox. $79.99 price and retailer boycotts.
+                    </div>
+                    <div class="timeline-card-details">
+                        <p class="details-text">Pre-orders open on PlayStation Store and Xbox Store. Price confirmed: $79.99 Standard Edition. Several major retailers boycott over no-disc controversy. Industry analysts predict $1B in pre-order revenue in first hour.</p>
+                        <div class="details-meta">
+                            <span class="meta-label">Source:</span>
+                            <span class="meta-val">Rockstar Games / Multiple outlets</span>
+                        </div>
+                    </div>
+                    <button class="expand-btn">
+                        <span>Read More</span>
+                        <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: COMMUNITY REACTIONS -->
+    <section id="reactions" class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">COMMUNITY REACTIONS</h2>
+            <p class="section-subtitle">Real-time live ticker of fan feedback across social networks</p>
+        </div>
+
+        <div class="ticker-wrapper">
+            <div class="ticker-carousel" id="reactionTicker">
+                <!-- Cards will be populated and dynamic via Javascript -->
+                <div class="ticker-card" id="tickerCard">
+                    <div class="ticker-meta">
+                        <span class="ticker-platform platform-reddit">Reddit</span>
+                        <span class="ticker-user">u/GTAFanatic</span>
+                    </div>
+                    <p class="ticker-text">"I took a day off work. My boss knows. He also took the day off."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: TOP YOUTUBER REACTIONS -->
+    <section id="creators" class="section-container bg-alt">
+        <div class="section-header">
+            <h2 class="section-title">TOP CREATOR REACTIONS</h2>
+            <p class="section-subtitle">Region-specific creators and coverage from the largest channels in the community</p>
+        </div>
+
+        <div class="creators-grid" id="creatorsGrid">
+            <!-- Dynamic creators cards populate here based on region -->
+        </div>
+    </section>
+
+    <!-- SECTION 6: LIVE YOUTUBE TRENDING (API-powered with Fallback) -->
+    <section id="trending" class="section-container">
+        <div class="section-header">
+            <div class="title-with-badge">
+                <h2 class="section-title">🔴 TRENDING NOW ON YOUTUBE &mdash; GTA 6</h2>
+                <div class="trending-controls">
+                    <div class="api-timestamp" id="apiTimestamp">Last updated: checking...</div>
+                    <div class="region-selector-wrapper">
+                        <label for="regionSelect" class="region-label">Region:</label>
+                        <select id="regionSelect" class="region-select">
+                            <option value="IN">India 🇮🇳</option>
+                            <option value="US" selected>United States 🇺🇸</option>
+                            <option value="GB">United Kingdom 🇬🇧</option>
+                            <option value="CA">Canada 🇨🇦</option>
+                            <option value="AU">Australia 🇦🇺</option>
+                            <option value="BR">Brazil 🇧🇷</option>
+                            <option value="DE">Germany 🇩🇪</option>
+                            <option value="JP">Japan 🇯🇵</option>
+                            <option value="FR">France 🇫🇷</option>
+                            <option value="ES">Spain 🇪🇸</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <p class="section-subtitle">Real-time dynamic feed loaded from YouTube search API (Cached 30 min)</p>
+        </div>
+
+        <div class="trending-container">
+            <div class="loader" id="trendingLoader">
+                <div class="spinner"></div>
+                <p>Retrieving trending videos from YouTube...</p>
+            </div>
+            
+            <div class="error-banner hidden" id="apiErrorBanner">
+                <div class="error-msg">⚠️ YouTube feed temporarily unavailable. Displaying recent trending content below.</div>
+            </div>
+
+            <div class="trending-grid" id="trendingGrid">
+                <!-- Dynamic cards populate here. 3 fallback cards are hardcoded as template when API is offline -->
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: OFFICIAL FORUMS & COMMUNITY LINKS -->
+    <section id="links" class="section-container bg-alt">
+        <div class="section-header">
+            <h2 class="section-title">COMMUNITY HUBS &amp; FORUMS</h2>
+            <p class="section-subtitle">Connect with other fans, follow theories, and read leaks</p>
+        </div>
+
+        <div class="links-grid">
+            <!-- GTAForums -->
+            <div class="link-card">
+                <div class="link-card-header">
+                    <h3>GTAForums.com</h3>
+                    <span class="link-badge">20M+ posts</span>
+                </div>
+                <p class="link-desc">Largest, oldest, and most detailed GTA community database. Host of major pre-launch analyses.</p>
+                <a href="https://gtaforums.com" target="_blank" class="btn btn-card">Visit Forums</a>
+            </div>
+
+            <!-- Reddit r/GTA6 -->
+            <div class="link-card">
+                <div class="link-card-header">
+                    <h3>r/GTA6</h3>
+                    <span class="link-badge">2M+ members</span>
+                </div>
+                <p class="link-desc">The primary hub for reddit theories, trailer dissections, community discussions and live news feeds.</p>
+                <a href="https://reddit.com/r/GTA6" target="_blank" class="btn btn-card">Join Subreddit</a>
+            </div>
+
+            <!-- Reddit r/GrandTheftAutoV -->
+            <div class="link-card">
+                <div class="link-card-header">
+                    <h3>r/GrandTheftAutoV</h3>
+                    <span class="link-badge">Active Community</span>
+                </div>
+                <p class="link-desc">Legacy hub for GTA V and Online, featuring ongoing discussions linking historical entries to GTA VI.</p>
+                <a href="https://reddit.com/r/GrandTheftAutoV" target="_blank" class="btn btn-card">Join Subreddit</a>
+            </div>
+
+            <!-- Rockstar Newswire -->
+            <div class="link-card">
+                <div class="link-card-header">
+                    <h3>Rockstar Newswire</h3>
+                    <span class="link-badge">Official Press</span>
+                </div>
+                <p class="link-desc">The official home of Rockstar Games updates. Ground zero for release dates and official media drops.</p>
+                <a href="https://rockstargames.com/newswire" target="_blank" class="btn btn-card">View Newswire</a>
+            </div>
+
+            <!-- GTABase.com -->
+            <div class="link-card">
+                <div class="link-card-header">
+                    <h3>GTABase.com</h3>
+                    <span class="link-badge">Fan Database</span>
+                </div>
+                <p class="link-desc">Extensive fan-run asset database detailing vehicles, leaks, datamines, weapon rumors, and mapping projects.</p>
+                <a href="https://www.gtabase.com" target="_blank" class="btn btn-card">Browse Database</a>
+            </div>
+
+            <!-- RockstarINTEL -->
+            <div class="link-card">
+                <div class="link-card-header">
+                    <h3>RockstarINTEL</h3>
+                    <span class="link-badge">News Source</span>
+                </div>
+                <p class="link-desc">Independent community-driven news channel covering GTA, Red Dead, and Rockstar Games culture.</p>
+                <a href="https://rockstarintel.com" target="_blank" class="btn btn-card">Read News</a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- SECTION 8: HYPE TIMELINE (Horizontal Scroll) -->
+    <section id="hype-chronology" class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">THE ROAD TO LAUNCH</h2>
+            <p class="section-subtitle">Horizontal scroll of critical milestones in GTA 6 history (Scroll left/right)</p>
+        </div>
+
+        <div class="horizontal-scroll-container">
+            <div class="horizontal-timeline" id="horizontalTimeline">
+                
+                <!-- Point 1 -->
+                <div class="timeline-node">
+                    <div class="node-date">Dec 2023</div>
+                    <div class="node-badge">Trailer 1</div>
+                    <div class="node-content">
+                        <h4>Trailer 1 Drops</h4>
+                        <p>Leaked early, Rockstar launches early. 93M views in 24 hours.</p>
+                    </div>
+                </div>
+
+                <!-- Point 2 -->
+                <div class="timeline-node">
+                    <div class="node-date">May 2025</div>
+                    <div class="node-badge">Trailer 2</div>
+                    <div class="node-content">
+                        <h4>Trailer 2 Released</h4>
+                        <p>Revealed Lucia &amp; Jason. 475M cross-platform views in 24 hours.</p>
+                    </div>
+                </div>
+
+                <!-- Point 3 -->
+                <div class="timeline-node node-warning">
+                    <div class="node-date">May 2025</div>
+                    <div class="node-badge badge-warning">Delay #1</div>
+                    <div class="node-content">
+                        <h4>First Delay</h4>
+                        <p>Pushed from Fall 2025 to May 26, 2026. Code polished.</p>
+                    </div>
+                </div>
+
+                <!-- Point 4 -->
+                <div class="timeline-node node-danger">
+                    <div class="node-date">Oct 2025</div>
+                    <div class="node-badge badge-danger">Fires</div>
+                    <div class="node-content">
+                        <h4>34 Employees Fired</h4>
+                        <p>Termination of leak channels. Union disputes and morale hit.</p>
+                    </div>
+                </div>
+
+                <!-- Point 5 -->
+                <div class="timeline-node node-warning">
+                    <div class="node-date">Nov 2025</div>
+                    <div class="node-badge badge-warning">Delay #2</div>
+                    <div class="node-content">
+                        <h4>Second Delay</h4>
+                        <p>Pushed to Nov 19, 2026. Take-Two stocks dropped 10%.</p>
+                    </div>
+                </div>
+
+                <!-- Point 6 -->
+                <div class="timeline-node">
+                    <div class="node-date">Jun 18, 2026</div>
+                    <div class="node-badge">Art Reveal</div>
+                    <div class="node-content">
+                        <h4>Cover Art Revealed</h4>
+                        <p>Lucia and Jason front center. Pre-order dates confirmed.</p>
+                    </div>
+                </div>
+
+                <!-- Point 7 -->
+                <div class="timeline-node">
+                    <div class="node-date">Jun 25, 2026</div>
+                    <div class="node-badge">Pre-Orders</div>
+                    <div class="node-content">
+                        <h4>Pre-Orders Go Live</h4>
+                        <p>Opened on PS5/Xbox for $79.99. No physical disc backlash.</p>
+                    </div>
+                </div>
+
+                <!-- Point 8 -->
+                <div class="timeline-node node-future">
+                    <div class="node-date">Nov 12, 2026</div>
+                    <div class="node-badge">Pre-Load</div>
+                    <div class="node-content">
+                        <h4>Physicals &amp; Preload</h4>
+                        <p>Retail boxes hit shelves containing digital download keys.</p>
+                    </div>
+                </div>
+
+                <!-- Point 9 -->
+                <div class="timeline-node node-special">
+                    <div class="node-date">Nov 19, 2026</div>
+                    <div class="node-badge badge-highlight">🔥 LAUNCH</div>
+                    <div class="node-content">
+                        <h4>Grand Release Day</h4>
+                        <p>Vice City opens to the world. A new era of gaming begins.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p class="footer-title">GTA VI LIVE HUB</p>
+            <p class="footer-text">Fan-made project. Not affiliated with Rockstar Games or Take-Two Interactive. Sales figures and tickers are based on analyst estimates and mock indicators.</p>
+            <p class="footer-copyright">&copy; 2026 GTA 6 Live Hub. Built for fans worldwide.</p>
+        </div>
+    </footer>
+
+    <!-- YouTube Lightbox Video Player Modal -->
+    <div id="videoModal" class="video-modal hidden">
+        <div class="video-modal-backdrop" id="modalBackdrop"></div>
+        <div class="video-modal-content">
+            <button class="video-modal-close" id="modalClose" aria-label="Close Player">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="video-modal-iframe-container">
+                <iframe id="modalIframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+</body>
+</html>
